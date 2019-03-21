@@ -84,12 +84,12 @@ def response(prod_code):
                + "至 #" + END_TIME[:10] + "\n" \
                + "无销售记录"
     ret = ""
-    ret = ret + "查抽:"
+    ret = ret + "查抽:"+"\n"
     for color in sorted(_dict[prod_code].keys()):
         ret += "[" + color + "]" + "\n"
         for spec in sorted(_dict[prod_code][color].keys()):
-            ret += str(spec) + ":" + _dict[prod_code][color][spec]
-    ret += "\n" + "零售统计:"
+            ret += str(spec) + ":" + _dict[prod_code][color][spec]+"\n"
+    ret += "\n" + "零售统计:"+"\n"
     for color in sorted(_sales_volume[prod_code].keys()):
         ret += "[" + color +"]=" + str(_sales_volume[prod_code][color]) + "\n"
     ret += "\n"
