@@ -17,22 +17,22 @@ END_TIME = ""
 
 _file_mtime = 0
 _dict = {}
+_sales_volume = {}
 
 # 获取数据,并且记录文件修改时间
 
 
 def get_data(path):
     _dict.clear()
+    _sales_volume.clear()
     data = utils.read_txt(path)
     _set_file_mtime()
     title = data[0]
-
     prod_code_col = title.index(PROD_CODE)
     prod_cls_code_col = title.index(PROD_CLS_CODE)
     trading_col = title.index(TRADING)
     sales_man_col = title.index(SALES_MAN)
     sale_amount_col = title.index(SALE_AMOUNT)
-
     data = data[1:]
     trading_list = [line[trading_col] for line in data]
     global START_TIME
@@ -48,49 +48,52 @@ def get_data(path):
         color_id = prod_code[-6:][:4]
         spec_id = int(prod_code[-2:])
         sale_amount = int(float(record[sale_amount_col]))
-
         if prod_cls_code not in _dict:
             _dict[prod_cls_code] = {}
-
+            _sales_volume[prod_cls_code] = {}
         if color_id not in _dict[prod_cls_code]:
             _dict[prod_cls_code][color_id] = {}
-
+            _sales_volume[prod_cls_code][color_id] = 0
         # if spec_id in dict[prod_cls_code][color_id]:
+        _sales_volume[prod_cls_code][color_id] += sale_amount
         if sale_amount > 0:
             _dict[prod_cls_code][color_id][int(
                 spec_id)] = salesman + " #" + trading[2:-3]
 
-# 设置文件修改时间
-
 
 def _set_file_mtime():
+    """
+    设置文件修改时间
+    """
     global _file_mtime
     _file_mtime = os.stat(PATH).st_mtime
 
 
-# 获取文件更改时间
-
-
 def get_file_mtime():
+
     return _file_mtime
 
 
-# 获取文本
-
-
 def response(prod_code):
+    """
+    获取文本
+    """
     if prod_code not in _dict:
         return "品种:" + prod_code + "\n" \
                + "从 #" + START_TIME[:10] + "\n" \
                + "至 #" + END_TIME[:10] + "\n" \
                + "无销售记录"
     ret = ""
-    prod = _dict[prod_code]
-    for color in sorted(prod.keys()):
+    ret = ret + "查抽:"
+    for color in sorted(_dict[prod_code].keys()):
         ret += "[" + color + "]" + "\n"
-        for spec in sorted(prod[color].keys()):
-            ret += str(spec) + ":" + prod[color][spec] + "\n"
-        ret += "\n"
+        for spec in sorted(_dict[prod_code][color].keys()):
+            ret += str(spec) + ":" + _dict[prod_code][color][spec]
+    ret += "\n" + "零售统计:"
+    for color in sorted(_sales_volume[prod_code].keys()):
+        ret += "[" + color +"]=" + str(_sales_volume[prod_code][color]) + "\n"
+    ret += "\n"
+    ret += "#" + START_TIME[:10] + "至 #" + END_TIME[:10] +"\n"
     return ret + "@@@ " + utils.format_time(get_file_mtime())
 
 
