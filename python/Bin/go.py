@@ -100,15 +100,16 @@ def createIndex(procls, length):
 def init():
 
     dict.clear()
-
     for d in dicts.values():
         d.clear()
-
     readCsv(CSV_PATH)
-
     for length in LENGTHS:
         createIndex(dict.keys(), length)
+    sortBin()
+    delInvaildBin()
+
     return
+
 
 # 货位列表转字符串
 
@@ -272,9 +273,6 @@ if __name__ == "__main__":
     start = time.time()
 
     init()
-    sortBin()
-    delInvaildBin()
-
     end = time.time()
     print("It run time is : %.03f seconds" % (end-start))
 
