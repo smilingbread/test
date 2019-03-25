@@ -22,7 +22,7 @@ def beep(seconds=1):
     GPIO.output(ioPin, GPIO.HIGH)
 
 #输入多次
-def beepAction(times, sleepsecs=0.5):
+def beep_action(times, sleepsecs=0.5):
     for i in range(times):
         beep()
         time.sleep(sleepsecs)
@@ -31,7 +31,7 @@ def close():
     GPIO.cleanup()
 
 #时转二进制
-def toBinList(h):
+def to_binlist(h):
     h = h%12 if h > 12 else h
     g= bin(h)[2:].zfill(4)
     ret = [int(x) for x in g]
@@ -45,7 +45,7 @@ if __name__ == "__main__":
         m = t.tm_min
         s = t.tm_sec
         if m == 0 and s == 0:
-            temp = toBinList(h)
+            temp = to_binlist(h)
             beep(BEGIN_SECONDS)
             time.sleep(SPACE_SCECONDS)
             for ele in temp:

@@ -44,7 +44,7 @@ if English:
 ROWS_COUNT = 11
 SEX_COLOR = {"1": "\33[00m", "0": "\33[41m"}
 RED_WHITE = "\033[41;37m"
-HEADERCOLOR = "\33[7m"
+HEADERCOLOR = "\33[46m"
 NOCOLOR = "\33[0m"
 
 COL1_LENGTH, COL2_LENGTH, COL3_LENGTH = 15, 10, 11
@@ -58,7 +58,7 @@ PRICE_KEY = "price"
 # 从csv文本读入
 
 
-def readCsv(csvPath):
+def read_csv(csvPath):
     # 读取csv信息到dict
     with open(csvPath) as csvfile:
         spamreader = csv.reader(csvfile)
@@ -82,10 +82,8 @@ def readCsv(csvPath):
 # 创建右边位数的索引
 
 
-def createIndex(procls, length):
-
+def create_index(procls, length):
     dicts[length].clear()
-
     for ele in procls:
         k = ele[-length:]
         if k not in dicts[length]:
@@ -98,23 +96,23 @@ def createIndex(procls, length):
 
 
 def init():
-
+    start = time.time()
     dict.clear()
     for d in dicts.values():
         d.clear()
-    readCsv(CSV_PATH)
+    read_csv(CSV_PATH)
     for length in LENGTHS:
-        createIndex(dict.keys(), length)
-    sortBin()
-    delInvaildBin()
-
-    return
+        create_index(dict.keys(), length)
+    sort_bin()
+    del_invaild_bin()
+    end = time.time()
+    return end-start
 
 
 # 货位列表转字符串
 
 
-def toString(arraylist):
+def to_string(arraylist):
     ret = ""
     for ele in arraylist:
         ret = ret + str(ele)+","
@@ -122,7 +120,7 @@ def toString(arraylist):
 
 
 # dict排序
-def sortBin():
+def sort_bin():
     for key in dict.keys():
         dict[key][GOODS_BIN_KEY].sort(
             key=lambda x: int(x) if x.isnumeric() else MAX_INT)
@@ -130,14 +128,14 @@ def sortBin():
 #
 
 
-def delInvaildBin():
+def del_invaild_bin():
     for key in dict.keys():
-        delInvaild(dict[key][GOODS_BIN_KEY])
+        del_invaild(dict[key][GOODS_BIN_KEY])
 
 # 删除多余货位
 
 
-def delInvaild(mylist):
+def del_invaild(mylist):
     temp = mylist[0]
     if len(mylist) <= 1:
         return
@@ -171,7 +169,7 @@ def analysis(text):
 # display
 
 
-def showHeader():
+def show_header():
     len1 = COL1_LENGTH
     len2 = COL2_LENGTH
     len3 = COL3_LENGTH
@@ -183,7 +181,7 @@ def showHeader():
           + COL3_NAME.ljust(len3) + NOCOLOR)
 
 
-def showCenter(fooList):
+def show_center(fooList):
     resList = ["" for ele in range(ROWS_COUNT)]
     if len(fooList) > 11:
         fooList = fooList[:11]
@@ -196,7 +194,7 @@ def showCenter(fooList):
 # 结果转换为列表,列表每个都是字符串,后与showCenter的list相加
 
 
-def covertList(keys):
+def covert_list(keys):
     ret = []
     for key in keys:
         sex = key[7]
@@ -205,7 +203,7 @@ def covertList(keys):
                     ).ljust(COL1_LENGTH)  # 品种编号
                    + (dict[key][PRICE_KEY]).ljust(COL2_LENGTH)
                    # 货位
-                   + toString(dict[key][GOODS_BIN_KEY]).ljust(COL3_LENGTH) +
+                   + to_string(dict[key][GOODS_BIN_KEY]).ljust(COL3_LENGTH) +
                    NOCOLOR)
     return ret
 
@@ -215,8 +213,8 @@ def covertList(keys):
 def display(fooList=[]):
     clear = "cls" if os.name == "nt" else "clear"
     os.system(clear)
-    showHeader()
-    showCenter(fooList)
+    show_header()
+    show_center(fooList)
     return
 
 # 查询
@@ -232,14 +230,14 @@ def reserch(text):
         display()
         print(RED_WHITE + NOT_FONUD + NOCOLOR, end="")
     else:
-        display(covertList(sorted(ret, key=strategy)))
+        display(covert_list(sorted(ret, key=strategy)))
 
 # 扣分
 
 
-def deductScore(text):
+def deduct_score(text):
     text = text[1:]
-    n = score.writeToCsv(*text.split("."))
+    n = score.writeto_csv(*text.split("."))
     print("Add " + RED_WHITE + str(n)+NOCOLOR + " records...")
     time.sleep(1)
     display()
@@ -252,13 +250,13 @@ def command(text):
     if text == QUIT_CMD:
         sys.exit(SAY_BYE)
     elif text == RELOAD_CMD:
-        print(RELOAD)
+        using_time = init()
+        print("It run time is : %.03f seconds" %using_time)
         time.sleep(1)
-        init()
         display()
     else:
         if score.match1(text):
-            deductScore(text)
+            deduct_score(text)
         else:
             reserch(text)
     return
@@ -270,11 +268,10 @@ def strategy(x):
 
 
 if __name__ == "__main__":
-    start = time.time()
 
-    init()
-    end = time.time()
-    print("It run time is : %.03f seconds" % (end-start))
+    using_time = init()
+
+    print("It run time is : %.03f seconds" %using_time)
 
     time.sleep(1)
     display()

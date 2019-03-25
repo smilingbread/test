@@ -23,13 +23,13 @@ def match2(text):
 # 返回当前时间
 
 
-def getNowStr():
+def get_now_str():
     return datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
 
 
 # 写入文本,返回成功添加的信息
-def writeToCsv(*record):
-    now = getNowStr()
+def writeto_csv(*record):
+    now = get_now_str()
     ret = 0
     with open(TEXT_PATH, "a") as file:
         for r in record:
@@ -49,7 +49,7 @@ if __name__ == "__main__":
         if text.lower() =="quit":
             print("退出...")
             break
-        n = writeToCsv(*text.split("."))
+        n = writeto_csv(*text.split("."))
         if n:
             print("添加 " + RED_WHITE + str(n) + NOCOLOR + " 条记录...")
         else:
