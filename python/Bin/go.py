@@ -44,7 +44,7 @@ if English:
 ROWS_COUNT = 11
 SEX_COLOR = {"1": "\33[00m", "0": "\33[41m"}
 RED_WHITE = "\033[41;37m"
-HEADERCOLOR = "\33[46m"
+HEADERCOLOR = "\33[44m"
 NOCOLOR = "\33[0m"
 
 COL1_LENGTH, COL2_LENGTH, COL3_LENGTH = 15, 10, 11
@@ -276,5 +276,5 @@ if __name__ == "__main__":
     time.sleep(1)
     display()
     while True:
-        text = input(PROMPT).replace(" ", "")
+        text = input(HEADERCOLOR + PROMPT + NOCOLOR).replace(" ", "")
         command(text)
