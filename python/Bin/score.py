@@ -1,7 +1,7 @@
 import datetime
 import re
 
-TEXT_PATH = "fuck.csv"
+TEXT_PATH = "data/fuck.csv"
 PATTERN = "^\+.*$"
 PATTERN1 = "^\d{3}--?\d+$"
 
