@@ -9,7 +9,7 @@ import sys
 
 import score
 
-CSV_PATH = 'data/bin.csv'
+CSV_PATH = os.path.join(os.getcwd(),'data/bin.csv')
 English = True
 MAX_INT = 99999
 
