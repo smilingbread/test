@@ -2,7 +2,7 @@ import datetime
 import re
 import os
 
-TEXT_PATH = os.path.join(os.getcwd(), os.listdir()[1], "data/.fuck.csv")
+TEXT_PATH = os.path.join(os.path.dirname(__file__), "data/.fuck.csv")
 PATTERN = "^\+.*$"
 PATTERN1 = "^\d{3}--?\d+$"
 
