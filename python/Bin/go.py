@@ -9,8 +9,7 @@ import sys
 
 import score
 
-print(os.getcwd())
-CSV_PATH = os.path.join(os.getcwd(),'data/bin.csv')
+CSV_PATH = os.path.join(os.getcwd(), os.listdir()[1], 'data/bin.csv')
 English = True
 MAX_INT = 99999
 
@@ -56,8 +55,6 @@ QUIT_CMD = ".88"
 GOODS_BIN_KEY = "goodsBin"
 PRICE_KEY = "price"
 
-# 从csv文本读入
-
 
 def read_csv(csvPath):
     # 读取csv信息到dict
@@ -80,10 +77,11 @@ def read_csv(csvPath):
                     temp.append(goodsBin)
     return
 
-# 创建右边位数的索引
-
 
 def create_index(procls, length):
+    """
+    创建右边位数的索引
+    """
     dicts[length].clear()
     for ele in procls:
         k = ele[-length:]
@@ -93,10 +91,11 @@ def create_index(procls, length):
             dicts[length][k].append(ele)
     return
 
-# 初始化,这个再刚开始运行与输入8个0的时候运行
-
 
 def init():
+    """
+    初始化,这个再刚开始运行与输入8个0的时候运行
+    """
     start = time.time()
     dict.clear()
     for d in dicts.values():
@@ -110,33 +109,34 @@ def init():
     return end-start
 
 
-# 货位列表转字符串
-
-
 def to_string(arraylist):
+    """
+    货位列表转字符串
+    """
     ret = ""
     for ele in arraylist:
         ret = ret + str(ele)+","
     return ret[:-1]
 
 
-# dict排序
 def sort_bin():
+    """
+    dict排序
+    """
     for key in dict.keys():
         dict[key][GOODS_BIN_KEY].sort(
             key=lambda x: int(x) if x.isnumeric() else MAX_INT)
-
-#
 
 
 def del_invaild_bin():
     for key in dict.keys():
         del_invaild(dict[key][GOODS_BIN_KEY])
 
-# 删除多余货位
-
 
 def del_invaild(mylist):
+    """
+    删除多余货位
+    """
     temp = mylist[0]
     if len(mylist) <= 1:
         return
@@ -148,10 +148,11 @@ def del_invaild(mylist):
             mylist.remove(ele)
         temp = ele
 
-# 解析数字,返回品种编号列表
-
 
 def analysis(text):
+    """
+    解析数字,返回品种编号列表
+    """
     length = len(text)
     ret = 0
     if length in LENGTHS:
@@ -166,8 +167,6 @@ def analysis(text):
         else:
             ret = [text]
     return ret
-
-# display
 
 
 def show_header():
@@ -192,10 +191,11 @@ def show_center(fooList):
     for ele in resList:
         print(ele)
 
-# 结果转换为列表,列表每个都是字符串,后与showCenter的list相加
-
 
 def covert_list(keys):
+    """
+    结果转换为列表,列表每个都是字符串,后与showCenter的list相加
+    """
     ret = []
     for key in keys:
         sex = key[7]
@@ -208,8 +208,6 @@ def covert_list(keys):
                    NOCOLOR)
     return ret
 
-# 显示
-
 
 def display(fooList=[]):
     clear = "cls" if os.name == "nt" else "clear"
@@ -217,8 +215,6 @@ def display(fooList=[]):
     show_header()
     show_center(fooList)
     return
-
-# 查询
 
 
 def reserch(text):
@@ -233,8 +229,6 @@ def reserch(text):
     else:
         display(covert_list(sorted(ret, key=strategy)))
 
-# 扣分
-
 
 def deduct_score(text):
     text = text[1:]
@@ -243,8 +237,6 @@ def deduct_score(text):
     time.sleep(1)
     display()
 
-# 命令
-
 
 def command(text):
 
@@ -252,7 +244,7 @@ def command(text):
         sys.exit(SAY_BYE)
     elif text == RELOAD_CMD:
         using_time = init()
-        print("It run time is : %.03f seconds" %using_time)
+        print("It run time is : %.03f seconds" % using_time)
         time.sleep(1)
         display()
     else:
@@ -263,7 +255,6 @@ def command(text):
     return
 
 
-# 结果排序算法,这边是按照价格降序排列
 def strategy(x):
     return -int(dict[x][PRICE_KEY])
 
@@ -272,13 +263,13 @@ if __name__ == "__main__":
 
     using_time = init()
 
-    print("It run time is : %.03f seconds" %using_time)
+    print("It run time is : %.03f seconds" % using_time)
 
     time.sleep(1)
     display()
     while True:
         text = input(HEADERCOLOR + PROMPT + NOCOLOR + "   ").replace(" ", "")
-        if text=="":
-            print("\033[1A\r\033[K",end="")
+        if text == "":
+            print("\033[1A\r\033[K", end="")
             continue
         command(text)
